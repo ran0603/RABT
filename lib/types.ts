@@ -86,6 +86,15 @@ export interface JuzMeta {
   hasCriticalStaleness: boolean; // >stale_critical_days
 }
 
+export interface DailyQueueRecommendation {
+  pages: number[];
+  title: string;
+  reasonSummary: string;
+  estimatedMinutes: number;
+  stumbledCount: number;
+  unrevisedCount: number;
+}
+
 export interface RABTExportData {
   version: string;
   appName: string;

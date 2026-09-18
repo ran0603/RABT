@@ -9,7 +9,8 @@ import {
   SessionPage,
   MemorizedPage,
   JuzMeta,
-  Profile
+  Profile,
+  DailyQueueRecommendation
 } from './types';
 import {
   getTotalPages,
@@ -331,3 +332,78 @@ export function getJuzMacroMetadata(
     };
   });
 }
+
+/**
+ * Calculates automated daily revision queue based on decay, stumbled pages, and target daily revision page count.
+ */
+export function generateDailyRevisionQueue(
+  retentionMap: Map<number, PageRetentionState>,
+  profile: Profile
+): DailyQueueRecommendation | null {
+  const memorizedList: PageRetentionState[] = [];
+  retentionMap.forEach(state => {
+    if (state.isMemorized) memorizedList.push(state);
+  });
+
+  if (memorizedList.length === 0) return null;
+
+  const targetCount = profile.default_daily_revision_pages ?? 5;
+
+  // Collect candidate pages prioritizing:
+  // 1. Stumbled pages
+  // 2. High decay / unrevised days (descending)
+  const stumbledPages = memorizedList.filter(p => p.stumbled);
+  const unrevisedPages = [...memorizedList].sort(
+    (a, b) => (b.daysSinceTouch ?? 0) - (a.daysSinceTouch ?? 0)
+  );
+
+  const selectedSet = new Set<number>();
+
+  // Add stumbled pages first
+  stumbledPages.forEach(p => {
+    if (selectedSet.size < targetCount) {
+      selectedSet.add(p.pageNumber);
+    }
+  });
+
+  // Top unrevised pages
+  for (const p of unrevisedPages) {
+    if (selectedSet.size >= targetCount) break;
+    selectedSet.add(p.pageNumber);
+  }
+
+  const selectedPages = Array.from(selectedSet).sort((a, b) => a - b);
+  if (selectedPages.length === 0) return null;
+
+  const stumbledInQueue = selectedPages.filter(p => retentionMap.get(p)?.stumbled).length;
+  const unrevisedInQueue = selectedPages.filter(p => (retentionMap.get(p)?.daysSinceTouch ?? 0) >= (profile.stale_warning_days ?? 14)).length;
+
+  const firstPage = selectedPages[0];
+  const lastPage = selectedPages[selectedPages.length - 1];
+  const surahName = retentionMap.get(firstPage)?.surahName || '';
+
+  let title = `pp. ${firstPage}–${lastPage} (${selectedPages.length} pp.)`;
+  if (selectedPages.length === 1) {
+    title = `Page ${firstPage} (${surahName})`;
+  } else if (surahName) {
+    title = `${surahName} (pp. ${firstPage}–${lastPage})`;
+  }
+
+  const reasons: string[] = [];
+  if (stumbledInQueue > 0) reasons.push(`${stumbledInQueue} stumbled page(s)`);
+  if (unrevisedInQueue > 0) reasons.push(`${unrevisedInQueue} unrevised target(s)`);
+  if (reasons.length === 0) reasons.push(`Regular daily maintenance touch`);
+
+  const reasonSummary = reasons.join(' • ');
+  const estimatedMinutes = Math.max(5, selectedPages.length * 3);
+
+  return {
+    pages: selectedPages,
+    title,
+    reasonSummary,
+    estimatedMinutes,
+    stumbledCount: stumbledInQueue,
+    unrevisedCount: unrevisedInQueue
+  };
+}
+

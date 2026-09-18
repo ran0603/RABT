@@ -6,7 +6,8 @@ import {
   calculateRetentionStates,
   getTopStaleContiguousClusters,
   calculateIndependentStreaks,
-  getJuzMacroMetadata
+  getJuzMacroMetadata,
+  generateDailyRevisionQueue
 } from '../lib/retention-engine';
 import { PageRetentionState, SessionType, Profile, MushafLayout } from '../lib/types';
 import { getJuzBounds, getTotalPages } from '../lib/quran-meta';
@@ -23,6 +24,8 @@ import { LegendDrawer } from '../components/LegendDrawer';
 import { OnboardingModal } from '../components/OnboardingModal';
 import { WelcomeAuthScreen } from '../components/WelcomeAuthScreen';
 import { EmailVerificationAlert } from '../components/EmailVerificationAlert';
+import { DailyRevisionQueueCard } from '../components/DailyRevisionQueueCard';
+import { TeacherShareModal } from '../components/TeacherShareModal';
 import { BookOpen } from 'lucide-react';
 
 export default function Home() {
@@ -42,6 +45,7 @@ export default function Home() {
   const [inspectedPage, setInspectedPage] = useState<PageRetentionState | null>(null);
   const [isLegendOpen, setIsLegendOpen] = useState(false);
   const [isLogDrawerOpen, setIsLogDrawerOpen] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [logInitialType, setLogInitialType] = useState<SessionType>('revise');
 
   // Check auth state on mount and trigger remote sync across devices
@@ -104,6 +108,11 @@ export default function Home() {
   // Compute Top 3 Stalest Contiguous Clusters
   const topStaleClusters = useMemo(() => {
     return getTopStaleContiguousClusters(retentionMap, activeProfile);
+  }, [retentionMap, activeProfile]);
+
+  // Compute Automated Daily Revision Queue Target
+  const dailyQueue = useMemo(() => {
+    return generateDailyRevisionQueue(retentionMap, activeProfile);
   }, [retentionMap, activeProfile]);
 
   // Total memorized count
@@ -246,11 +255,18 @@ export default function Home() {
       <Header
         onOpenLegend={() => setIsLegendOpen(true)}
         onOpenLogDrawer={() => handleOpenLogModal('revise')}
+        onOpenShareModal={() => setIsShareModalOpen(true)}
         totalMemorized={totalMemorizedCount}
       />
 
       {/* Unverified Email Cross-Device Sync Warning Banner */}
       <EmailVerificationAlert />
+
+      {/* Today's Automated Revision Target Queue */}
+      <DailyRevisionQueueCard
+        queue={dailyQueue}
+        onSelectQueuePages={handleSelectCluster}
+      />
 
       {/* 3 Independent Streaks Strip (Sunday start, Today/Yesterday forgiveness with day cutoff hour) */}
       <ActivityStreaks streaks={streaks} />
@@ -333,6 +349,15 @@ export default function Home() {
         stumbledPages={stumbledStagingPages}
         onClose={() => setIsLogDrawerOpen(false)}
         onSubmitSession={handleSubmitSession}
+      />
+
+      {/* Teacher / Circle Share Modal */}
+      <TeacherShareModal
+        isOpen={isShareModalOpen}
+        onClose={() => setIsShareModalOpen(false)}
+        profile={activeProfile}
+        totalMemorized={totalMemorizedCount}
+        streaks={streaks}
       />
 
       {/* Heuristics & Legend Drawer */}

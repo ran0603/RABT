@@ -3,17 +3,19 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { getLocalUser, AuthUser } from '../lib/supabase-client';
-import { Info, Plus, User, Settings } from 'lucide-react';
+import { Info, Plus, User, Share2 } from 'lucide-react';
 
 interface HeaderProps {
   onOpenLegend: () => void;
   onOpenLogDrawer: () => void;
+  onOpenShareModal?: () => void;
   totalMemorized: number;
 }
 
 export const Header: React.FC<HeaderProps> = ({
   onOpenLegend,
   onOpenLogDrawer,
+  onOpenShareModal,
   totalMemorized
 }) => {
   const [user, setUser] = useState<AuthUser | null>(null);
@@ -59,13 +61,24 @@ export const Header: React.FC<HeaderProps> = ({
             <span className="truncate max-w-[110px]">{user ? user.fullName : 'Learner'}</span>
           </Link>
 
+          {onOpenShareModal && (
+            <button
+              onClick={onOpenShareModal}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-surface-border text-slate hover:text-ink hover:bg-surface text-xs font-semibold transition-colors"
+              title="Share Progress Card with Teacher"
+            >
+              <Share2 className="w-3.5 h-3.5 text-teal-deep" />
+              <span className="hidden md:inline">Share</span>
+            </button>
+          )}
+
           <button
             onClick={onOpenLegend}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-surface-border text-slate hover:text-ink hover:bg-surface text-xs font-semibold transition-colors"
             title="Inspect Heuristics & Legend"
           >
             <Info className="w-3.5 h-3.5 text-teal-deep" />
-            <span className="hidden sm:inline">Heuristics</span>
+            <span className="hidden sm:inline">Guide</span>
           </button>
 
           <button
