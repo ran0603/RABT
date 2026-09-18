@@ -69,38 +69,38 @@ export const PageInspectorModal: React.FC<PageInspectorModalProps> = ({
             </button>
           </div>
 
-          {/* 2D Heuristic Metrics Breakdown */}
+          {/* Memory Metrics Breakdown */}
           <div className="space-y-2">
             <h4 className="text-xs font-bold uppercase tracking-wider text-slate">
-              Inspectable Heuristic Matrix
+              Memory State Metrics
             </h4>
 
             <div className="grid grid-cols-2 gap-2">
-              {/* Dimension 1: Lifetime Mastery */}
+              {/* Dimension 1: Memory Strength */}
               <div className="p-3 rounded-xl border border-surface-border bg-white">
                 <div className="flex items-center gap-1.5 text-xs text-slate font-medium mb-1">
                   <Activity className="w-3.5 h-3.5 text-teal-deep" />
-                  <span>1. Lifetime Touches</span>
+                  <span>1. Memory Strength</span>
                 </div>
                 <div className="text-lg font-bold font-mono text-ink">
                   {page.totalTouches} touches
                 </div>
                 <div className="text-[11px] text-slate mt-0.5 capitalize">
-                  State: {page.masteryLevel} wear
+                  Level: {page.masteryLevel === 'sand' ? 'Building' : page.masteryLevel === 'amber' ? 'Solid' : page.masteryLevel === 'sage' ? 'Mastered' : 'Unmemorized'}
                 </div>
               </div>
 
-              {/* Dimension 2: Current Decay */}
+              {/* Dimension 2: Memory Freshness */}
               <div className="p-3 rounded-xl border border-surface-border bg-white">
                 <div className="flex items-center gap-1.5 text-xs text-slate font-medium mb-1">
                   <Calendar className="w-3.5 h-3.5 text-apricot-muted" />
-                  <span>2. Current Decay</span>
+                  <span>2. Memory Freshness</span>
                 </div>
                 <div className="text-lg font-bold font-mono text-ink">
-                  {page.daysSinceTouch !== null ? `${page.daysSinceTouch} days` : '—'}
+                  {page.daysSinceTouch !== null ? `${page.daysSinceTouch}d unrevised` : '—'}
                 </div>
                 <div className="text-[11px] text-slate mt-0.5 capitalize">
-                  State: {page.decayLevel || 'Unmemorized'}
+                  Status: {page.decayLevel === 'fresh' ? 'Fresh' : page.decayLevel === 'cooling' ? 'Cooling' : page.decayLevel === 'decaying' ? 'Needs Review' : 'Unmemorized'}
                 </div>
               </div>
             </div>

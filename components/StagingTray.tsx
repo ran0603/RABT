@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { SessionType } from '../lib/types';
-import { AlertTriangle, Check, X, Play, Hash } from 'lucide-react';
+import { AlertTriangle, Check, X, Hash, BookOpen, Repeat, Mic, FileText } from 'lucide-react';
 import { clsx } from 'clsx';
 
 interface StagingTrayProps {
@@ -11,7 +11,12 @@ interface StagingTrayProps {
   onSelectPages: (pageNumbers: number[]) => void;
   onClearSelection: () => void;
   onToggleStumbleForSelected: () => void;
-  onOpenLogModal: (type: SessionType) => void;
+  onSubmitSession: (
+    type: SessionType,
+    pageNumbers: number[],
+    stumbledPages: number[],
+    notes: string
+  ) => void;
 }
 
 export const StagingTray: React.FC<StagingTrayProps> = ({
@@ -20,10 +25,12 @@ export const StagingTray: React.FC<StagingTrayProps> = ({
   onSelectPages,
   onClearSelection,
   onToggleStumbleForSelected,
-  onOpenLogModal
+  onSubmitSession
 }) => {
   const [rangeInput, setRangeInput] = useState('');
   const [showRangeInput, setShowRangeInput] = useState(false);
+  const [showNoteInput, setShowNoteInput] = useState(false);
+  const [notesText, setNotesText] = useState('');
 
   // Parse numeric range e.g. "282-286" or "10,11,12"
   const handleApplyRangeInput = (e?: React.FormEvent) => {
@@ -31,9 +38,8 @@ export const StagingTray: React.FC<StagingTrayProps> = ({
     if (!rangeInput.trim()) return;
 
     const parsedPages = new Set<number>();
-
-    // Split by comma
     const parts = rangeInput.split(',');
+
     parts.forEach(part => {
       const trimmed = part.trim();
       if (trimmed.includes('-')) {
@@ -83,6 +89,15 @@ export const StagingTray: React.FC<StagingTrayProps> = ({
     return `${sorted.length} pages selected`;
   };
 
+  // Submit session directly from 1-tap buttons
+  const handleQuickSubmit = (type: SessionType) => {
+    if (selectedPages.length === 0) return;
+    const stumbledList = Array.from(stumbledStagingPages).filter(p => selectedPages.includes(p));
+    onSubmitSession(type, selectedPages, stumbledList, notesText);
+    setNotesText('');
+    setShowNoteInput(false);
+  };
+
   if (selectedPages.length === 0 && !showRangeInput) {
     return (
       <div className="fixed bottom-4 left-4 right-4 max-w-lg mx-auto z-20">
@@ -105,61 +120,108 @@ export const StagingTray: React.FC<StagingTrayProps> = ({
   const anyStumbled = selectedPages.some(p => stumbledStagingPages.has(p));
 
   return (
-    <div className="fixed bottom-4 left-4 right-4 max-w-xl mx-auto z-20">
-      <div className="bg-ink text-white rounded-2xl p-3.5 shadow-modal border border-teal-deep/30 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 animate-in fade-in slide-in-from-bottom-2">
-        {/* Selection Details */}
-        <div className="flex items-center justify-between sm:justify-start gap-3">
-          <button
-            onClick={onClearSelection}
-            className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors"
-            title="Clear Selection"
-          >
-            <X className="w-4 h-4" />
-          </button>
+    <div className="fixed bottom-4 left-4 right-4 max-w-2xl mx-auto z-20">
+      <div className="bg-ink text-white rounded-2xl p-3.5 shadow-modal border border-teal-deep/30 flex flex-col gap-3 animate-in fade-in slide-in-from-bottom-2">
+        {/* Top Header: Selection Details & Fast Toggles */}
+        <div className="flex items-center justify-between gap-3 pb-2 border-b border-white/10">
+          <div className="flex items-center gap-2.5">
+            <button
+              onClick={onClearSelection}
+              className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors"
+              title="Clear Selection"
+            >
+              <X className="w-4 h-4" />
+            </button>
 
-          <div>
-            <div className="text-xs font-bold text-white tracking-wide">
-              {formatSelectionRange(selectedPages)}
+            <div>
+              <div className="text-xs font-bold text-white tracking-wide">
+                {formatSelectionRange(selectedPages)}
+              </div>
+              <div className="text-[11px] text-slate-light font-medium">
+                {anyStumbled ? 'Contains flagged stumbles' : 'Ready to record activity'}
+              </div>
             </div>
-            <div className="text-[11px] text-slate-light font-medium">
-              {anyStumbled ? 'Contains flagged stumbles' : 'Ready to record activity'}
-            </div>
+          </div>
+
+          <div className="flex items-center gap-1.5">
+            {/* Stumble Toggle */}
+            <button
+              onClick={onToggleStumbleForSelected}
+              className={clsx(
+                'flex items-center gap-1 px-2.5 py-1 rounded-xl text-xs font-semibold border transition-colors',
+                anyStumbled
+                  ? 'bg-apricot-muted/20 border-apricot-muted text-apricot-muted'
+                  : 'bg-white/10 border-white/20 text-white hover:bg-white/20'
+              )}
+              title="Flag stumble — priority re-testing scheduled"
+            >
+              <AlertTriangle className="w-3.5 h-3.5 text-apricot-muted" />
+              <span className="hidden sm:inline">{anyStumbled ? 'Stumbled Flagged' : 'Flag Stumble'}</span>
+            </button>
+
+            {/* Note Toggle */}
+            <button
+              onClick={() => setShowNoteInput(!showNoteInput)}
+              className={clsx(
+                'p-1.5 rounded-xl border text-xs font-semibold transition-colors',
+                showNoteInput || notesText
+                  ? 'bg-teal-light/20 border-teal-deep text-teal-light'
+                  : 'bg-white/10 border-white/20 text-white hover:bg-white/20'
+              )}
+              title="Add Session Notes"
+            >
+              <FileText className="w-4 h-4" />
+            </button>
+
+            {/* Range Input Toggle */}
+            <button
+              onClick={() => setShowRangeInput(!showRangeInput)}
+              className="p-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white"
+              title="Fast Range Fallback"
+            >
+              <Hash className="w-4 h-4" />
+            </button>
           </div>
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex items-center gap-2 overflow-x-auto">
-          {/* Stumble Flagging Toggle */}
-          <button
-            onClick={onToggleStumbleForSelected}
-            className={clsx(
-              'flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-semibold border transition-colors shrink-0',
-              anyStumbled
-                ? 'bg-apricot-muted/20 border-apricot-muted text-apricot-muted'
-                : 'bg-white/10 border-white/20 text-white hover:bg-white/20'
-            )}
-            title="Flag stumble — priority re-testing without erasing lifetime wear"
-          >
-            <AlertTriangle className="w-3.5 h-3.5 text-apricot-muted" />
-            <span>{anyStumbled ? 'Stumbled Flagged' : 'Flag Stumble'}</span>
-          </button>
+        {/* Optional Inline Note Input */}
+        {showNoteInput && (
+          <div className="animate-in fade-in">
+            <input
+              type="text"
+              value={notesText}
+              onChange={e => setNotesText(e.target.value)}
+              placeholder="Session notes (e.g., slight hesitation on ayah 14)..."
+              className="w-full bg-white/10 border border-white/20 rounded-xl px-3 py-1.5 text-xs text-white placeholder-slate-light focus:outline-none focus:ring-1 focus:ring-teal-light"
+              autoFocus
+            />
+          </div>
+        )}
 
-          {/* Range input toggle */}
+        {/* Action Buttons Row: 1-Tap Logging */}
+        <div className="grid grid-cols-3 gap-2 pt-0.5">
           <button
-            onClick={() => setShowRangeInput(!showRangeInput)}
-            className="p-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white shrink-0"
-            title="Fast Numeric Range Fallback"
+            onClick={() => handleQuickSubmit('revise')}
+            className="flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-teal-deep hover:bg-teal-forest text-white text-xs font-bold shadow-sm transition-all"
           >
-            <Hash className="w-4 h-4" />
-          </button>
-
-          {/* Log Revision Action */}
-          <button
-            onClick={() => onOpenLogModal('revise')}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-teal-deep hover:bg-teal-forest text-white text-xs font-bold shadow-sm transition-all shrink-0"
-          >
-            <Check className="w-4 h-4" />
+            <Repeat className="w-3.5 h-3.5" />
             <span>Log Revise</span>
+          </button>
+
+          <button
+            onClick={() => handleQuickSubmit('memorize')}
+            className="flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-amber-warm/80 hover:bg-amber-warm text-white text-xs font-bold shadow-sm transition-all"
+          >
+            <BookOpen className="w-3.5 h-3.5" />
+            <span>Log Hifz</span>
+          </button>
+
+          <button
+            onClick={() => handleQuickSubmit('recite')}
+            className="flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-sage-dark/80 hover:bg-sage-dark text-white text-xs font-bold shadow-sm transition-all"
+          >
+            <Mic className="w-3.5 h-3.5" />
+            <span>Log Recite</span>
           </button>
         </div>
       </div>
@@ -168,7 +230,7 @@ export const StagingTray: React.FC<StagingTrayProps> = ({
       {showRangeInput && (
         <form
           onSubmit={handleApplyRangeInput}
-          className="mt-2 bg-white border border-surface-border rounded-2xl p-3 shadow-modal flex items-center gap-2"
+          className="mt-2 bg-white border border-surface-border rounded-2xl p-3 shadow-modal flex items-center gap-2 animate-in fade-in"
         >
           <input
             type="text"

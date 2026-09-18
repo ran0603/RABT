@@ -306,7 +306,7 @@ export default function Home() {
         onSelectPages={handleSelectPages}
         onClearSelection={handleClearSelection}
         onToggleStumbleForSelected={handleToggleStumbleForSelected}
-        onOpenLogModal={handleOpenLogModal}
+        onSubmitSession={handleSubmitSession}
       />
 
       {/* Page Heuristic Inspector Modal */}

@@ -22,11 +22,11 @@ export const ContiguityChips: React.FC<ContiguityChipsProps> = ({
           <div className="flex items-center gap-2">
             <Sparkles className="w-3.5 h-3.5 text-apricot-muted" />
             <h3 className="text-xs font-bold uppercase tracking-wider text-ink">
-              Contiguity Engine — High-Staleness Clusters
+              Suggested Review Chunks
             </h3>
           </div>
           <span className="text-[11px] text-slate-light font-medium hidden sm:inline">
-            Measurable staleness • Preserves Qur’anic context
+            Smart suggestions based on your revision history
           </span>
         </div>
 
@@ -50,7 +50,7 @@ export const ContiguityChips: React.FC<ContiguityChipsProps> = ({
 
                 <div className="flex items-center gap-1 bg-apricot-light px-2 py-0.5 rounded-md text-apricot-muted text-[10px] font-bold shrink-0 border border-apricot-muted/20">
                   <Clock className="w-3 h-3" />
-                  <span>{c.averageDaysStale}d stale</span>
+                  <span>{c.averageDaysStale}d unrevised</span>
                 </div>
               </div>
 

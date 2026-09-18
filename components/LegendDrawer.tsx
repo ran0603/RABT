@@ -18,10 +18,10 @@ export const LegendDrawer: React.FC<LegendDrawerProps> = ({ isOpen, onClose }) =
         <div className="bg-teal-deep text-white p-4 flex items-center justify-between shrink-0">
           <div>
             <h3 className="text-sm font-bold flex items-center gap-2">
-              <span>RABT Heuristics & Brand Philosophy</span>
+              <span>Memory Guide & System Rules</span>
             </h3>
             <p className="text-xs text-white/80">
-              رَبْط — Quiet, precise instrument for Hifz retention
+              رَبْط — Quiet, precise companion for Hifz retention
             </p>
           </div>
 
@@ -39,40 +39,40 @@ export const LegendDrawer: React.FC<LegendDrawerProps> = ({ isOpen, onClose }) =
           <div className="p-3 rounded-xl bg-surface border border-surface-border">
             <div className="flex items-center gap-2 text-xs font-bold text-teal-deep uppercase tracking-wider mb-1">
               <ShieldCheck className="w-4 h-4" />
-              <span>Instrument, Not Coach</span>
+              <span>Quiet Companion Philosophy</span>
             </div>
             <p className="text-xs text-slate leading-relaxed">
-              RABT observes and presents the state of your Hifz record. It strictly avoids gamification (no XP, badges, leaderboards, or confetti). Every calculated metric is transparent and inspectable.
+              RABT presents the state of your Hifz memory cleanly and transparently. It avoids noisy gamification, focusing instead on accurate, inspectable indicators of memory strength and revision recency.
             </p>
           </div>
 
-          {/* Two-Tone Heatmap Section */}
+          {/* Retention Matrix Section */}
           <div className="space-y-2">
             <h4 className="text-xs font-bold uppercase tracking-wider text-slate">
-              Two-Tone Wear & Decay Heatmap Matrix
+              Memory Color Guide
             </h4>
             <p className="text-xs text-slate">
-              Every page cell (1–604) communicates two independent dimensions:
+              Every page cell communicates two complementary dimensions:
             </p>
 
             {/* Dimension 1 */}
             <div className="p-3 rounded-xl border border-surface-border bg-white space-y-1.5">
               <div className="flex items-center justify-between text-xs font-bold text-ink">
-                <span>1. Lifetime Mastery — Hue / Depth</span>
-                <span className="text-[10px] text-slate font-medium">Revision Touches</span>
+                <span>1. Memory Strength (Cumulative Practice)</span>
+                <span className="text-[10px] text-slate font-medium">Total Touches</span>
               </div>
               <div className="grid grid-cols-2 gap-1.5 text-[11px]">
                 <div className="p-1.5 rounded bg-surface border border-surface-border text-slate">
-                  <strong>0Touches:</strong> Translucent Sand
+                  <strong>0 Touches:</strong> Unmemorized
                 </div>
                 <div className="p-1.5 rounded bg-amber-light/40 border border-amber-warm/30 text-ink">
-                  <strong>1–10 Touches:</strong> Pale Sand
+                  <strong>1–10 Touches:</strong> Building (Pale Sand)
                 </div>
                 <div className="p-1.5 rounded bg-amber-warm/20 border border-amber-warm/50 text-ink">
-                  <strong>11–25 Touches:</strong> Warm Amber
+                  <strong>11–25 Touches:</strong> Solid (Warm Amber)
                 </div>
                 <div className="p-1.5 rounded bg-sage-light border border-sage/40 text-teal-forest">
-                  <strong>26+ Touches:</strong> Sage Green
+                  <strong>26+ Touches:</strong> Mastered (Sage Green)
                 </div>
               </div>
             </div>
@@ -80,18 +80,18 @@ export const LegendDrawer: React.FC<LegendDrawerProps> = ({ isOpen, onClose }) =
             {/* Dimension 2 */}
             <div className="p-3 rounded-xl border border-surface-border bg-white space-y-1.5">
               <div className="flex items-center justify-between text-xs font-bold text-ink">
-                <span>2. Current Decay — Opacity / Wash</span>
-                <span className="text-[10px] text-slate font-medium">Days Since Touch</span>
+                <span>2. Memory Freshness (Revision Recency)</span>
+                <span className="text-[10px] text-slate font-medium">Days Elapsed</span>
               </div>
               <div className="grid grid-cols-3 gap-1.5 text-[11px]">
                 <div className="p-1.5 rounded bg-white border border-teal-deep/30 text-ink">
-                  <strong>0–7 days:</strong> 100% Fresh
+                  <strong>0–7 days:</strong> Fresh 🟢
                 </div>
                 <div className="p-1.5 rounded bg-surface border border-surface-border text-slate">
-                  <strong>8–21 days:</strong> Cooling (70%)
+                  <strong>8–21 days:</strong> Cooling 🟡
                 </div>
                 <div className="p-1.5 rounded bg-slate-faint border border-slate/30 text-slate">
-                  <strong>22+ days:</strong> Decaying Wash
+                  <strong>22+ days:</strong> Needs Review 🔴
                 </div>
               </div>
             </div>
@@ -101,10 +101,10 @@ export const LegendDrawer: React.FC<LegendDrawerProps> = ({ isOpen, onClose }) =
           <div className="p-3 rounded-xl border border-surface-border bg-white space-y-1">
             <div className="flex items-center gap-1.5 text-xs font-bold text-ink">
               <Sparkles className="w-3.5 h-3.5 text-apricot-muted" />
-              <span>Natural Contiguity Suggestion Engine</span>
+              <span>Suggested Review Chunks</span>
             </div>
             <p className="text-xs text-slate leading-relaxed">
-              Groups pages into Hizb quarters and Surah boundaries to calculate staleness scores (<code className="bg-surface px-1 py-0.5 rounded text-[10px]">average days since revision</code>). Surfaces the 3 stalest contiguous clusters as quick-fill chips.
+              Groups pages into Hizb quarters and Surahs to calculate average unrevised days. Recommends the 3 most critical contiguous sections to review next.
             </p>
           </div>
 
