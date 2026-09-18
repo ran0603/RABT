@@ -42,7 +42,7 @@ export const Header: React.FC<HeaderProps> = ({
                   Hifz Retention Engine
                 </span>
               </div>
-              <p className="text-xs text-slate font-medium">
+              <p className="text-xs text-slate font-medium hidden sm:block">
                 Connect what you memorized. Keep it firm. ({totalMemorized} pp.)
               </p>
             </div>
