@@ -19,8 +19,8 @@ export const JuzMacroStrip: React.FC<JuzMacroStripProps> = ({
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   return (
-    <section className="bg-white border-b border-surface-border py-3 px-4 select-none">
-      <div className="max-w-4xl mx-auto">
+    <section className="bg-white border-b border-surface-border py-3 px-3 sm:px-4 select-none">
+      <div className="max-w-4xl lg:max-w-6xl 2xl:max-w-7xl 3xl:max-w-[1600px] mx-auto">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
             <Layers className="w-3.5 h-3.5 text-teal-deep" />

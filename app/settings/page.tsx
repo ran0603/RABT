@@ -164,8 +164,8 @@ export default function SettingsPage() {
   return (
     <main className="min-h-screen bg-white text-ink pb-20 font-sans">
       {/* Top Header */}
-      <header className="sticky top-0 z-30 bg-white border-b border-surface-border px-4 py-3 shadow-subtle">
-        <div className="max-w-3xl mx-auto flex items-center justify-between">
+      <header className="sticky top-0 z-30 bg-white border-b border-surface-border px-3 sm:px-4 py-3 shadow-subtle">
+        <div className="max-w-3xl lg:max-w-5xl 2xl:max-w-6xl mx-auto flex items-center justify-between">
           <Link
             href="/"
             className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate hover:text-ink transition-colors"
@@ -188,7 +188,7 @@ export default function SettingsPage() {
         </div>
       </header>
 
-      <div className="max-w-3xl mx-auto px-4 py-6 space-y-6">
+      <div className="max-w-3xl lg:max-w-5xl 2xl:max-w-6xl mx-auto px-3 sm:px-4 py-6 space-y-6">
         {/* Section 1: Instrumentation Calibration */}
         <section className="bg-white border border-surface-border rounded-2xl p-5 shadow-card space-y-4">
           <div className="flex items-center gap-2 border-b border-surface-border pb-3">

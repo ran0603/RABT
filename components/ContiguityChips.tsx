@@ -16,8 +16,8 @@ export const ContiguityChips: React.FC<ContiguityChipsProps> = ({
   if (clusters.length === 0) return null;
 
   return (
-    <section className="bg-surface/60 border-y border-surface-border py-3 px-4">
-      <div className="max-w-4xl mx-auto">
+    <section className="bg-surface/60 border-y border-surface-border py-3 px-3 sm:px-4">
+      <div className="max-w-4xl lg:max-w-6xl 2xl:max-w-7xl 3xl:max-w-[1600px] mx-auto">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
             <Sparkles className="w-3.5 h-3.5 text-apricot-muted" />

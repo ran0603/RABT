@@ -23,8 +23,8 @@ export const Header: React.FC<HeaderProps> = ({
   }, []);
 
   return (
-    <header className="sticky top-0 z-30 bg-white border-b border-surface-border px-4 py-3 shadow-subtle font-sans">
-      <div className="max-w-4xl mx-auto flex items-center justify-between gap-3">
+    <header className="sticky top-0 z-30 bg-white border-b border-surface-border px-3 sm:px-4 py-3 shadow-subtle font-sans">
+      <div className="max-w-4xl lg:max-w-6xl 2xl:max-w-7xl 3xl:max-w-[1600px] mx-auto flex items-center justify-between gap-2 sm:gap-3">
         {/* Brand Left */}
         <div className="flex items-center gap-3">
           <Link href="/" className="flex items-center gap-3 group">

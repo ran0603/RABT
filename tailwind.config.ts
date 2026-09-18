@@ -45,7 +45,16 @@ const config: Config = {
         subtle: "0 1px 3px rgba(32, 38, 37, 0.04), 0 1px 2px rgba(32, 38, 37, 0.02)",
         card: "0 2px 8px rgba(32, 38, 37, 0.06)",
         modal: "0 12px 32px rgba(18, 75, 74, 0.12)",
-      }
+      },
+      screens: {
+        xs: "380px",
+        sm: "640px",
+        md: "768px",
+        lg: "1024px",
+        xl: "1280px",
+        "2xl": "1440px",
+        "3xl": "1920px",
+      },
     },
   },
   plugins: [],

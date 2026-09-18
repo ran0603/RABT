@@ -70,7 +70,7 @@ export const PageCanvasGrid: React.FC<PageCanvasGridProps> = ({
       onPointerLeave={handlePointerUp}
       className="w-full select-none"
     >
-      <div className="grid grid-cols-5 sm:grid-cols-5 md:grid-cols-10 gap-2">
+      <div className="grid grid-cols-4 xs:grid-cols-5 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 2xl:grid-cols-12 3xl:grid-cols-15 gap-1.5 sm:gap-2">
         {pages.map(p => {
           const isSelected = selectedPageNumbers.has(p.pageNumber);
           const isStumbledStaging = stumbledStagingPages.has(p.pageNumber);
