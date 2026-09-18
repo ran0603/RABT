@@ -10,6 +10,7 @@ interface LogSessionDrawerProps {
   initialType?: SessionType;
   selectedPages: number[];
   stumbledPages: Set<number>;
+  totalPages?: number;
   onClose: () => void;
   onSubmitSession: (
     type: SessionType,
@@ -24,6 +25,7 @@ export const LogSessionDrawer: React.FC<LogSessionDrawerProps> = ({
   initialType = 'revise',
   selectedPages,
   stumbledPages,
+  totalPages = 604,
   onClose,
   onSubmitSession
 }) => {
@@ -58,15 +60,15 @@ export const LogSessionDrawer: React.FC<LogSessionDrawerProps> = ({
         const start = parseInt(startStr, 10);
         const end = parseInt(endStr, 10);
         if (!isNaN(start) && !isNaN(end)) {
-          const min = Math.max(1, Math.min(604, Math.min(start, end)));
-          const max = Math.max(1, Math.min(604, Math.max(start, end)));
+          const min = Math.max(1, Math.min(totalPages, Math.min(start, end)));
+          const max = Math.max(1, Math.min(totalPages, Math.max(start, end)));
           for (let p = min; p <= max; p++) {
             parsedPages.add(p);
           }
         }
       } else {
         const num = parseInt(trimmed, 10);
-        if (!isNaN(num) && num >= 1 && num <= 604) {
+        if (!isNaN(num) && num >= 1 && num <= totalPages) {
           parsedPages.add(num);
         }
       }
@@ -74,7 +76,7 @@ export const LogSessionDrawer: React.FC<LogSessionDrawerProps> = ({
 
     const pageList = Array.from(parsedPages);
     if (pageList.length === 0) {
-      alert('Please enter at least one valid page number between 1 and 604.');
+      alert(`Please enter at least one valid page number between 1 and ${totalPages}.`);
       return;
     }
 
@@ -164,7 +166,7 @@ export const LogSessionDrawer: React.FC<LogSessionDrawerProps> = ({
           {/* Target Pages Input */}
           <div className="space-y-1.5">
             <label className="text-xs font-bold uppercase tracking-wider text-slate flex items-center justify-between">
-              <span>2. Target Pages (1–604)</span>
+              <span>2. Target Pages (1–{totalPages})</span>
               <span className="text-[10px] text-teal-deep font-semibold">e.g. 262-267 or 1,2,3</span>
             </label>
             <div className="relative">

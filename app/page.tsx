@@ -319,6 +319,7 @@ export default function Home() {
       <StagingTray
         selectedPages={Array.from(selectedPageNumbers)}
         stumbledStagingPages={stumbledStagingPages}
+        totalPages={totalPages}
         onSelectPages={handleSelectPages}
         onClearSelection={handleClearSelection}
         onToggleStumbleForSelected={handleToggleStumbleForSelected}
@@ -347,6 +348,7 @@ export default function Home() {
         initialType={logInitialType}
         selectedPages={Array.from(selectedPageNumbers)}
         stumbledPages={stumbledStagingPages}
+        totalPages={totalPages}
         onClose={() => setIsLogDrawerOpen(false)}
         onSubmitSession={handleSubmitSession}
       />

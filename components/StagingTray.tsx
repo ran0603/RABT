@@ -4,10 +4,12 @@ import React, { useState } from 'react';
 import { SessionType } from '../lib/types';
 import { AlertTriangle, Check, X, Hash, BookOpen, Repeat, Mic, FileText } from 'lucide-react';
 import { clsx } from 'clsx';
+import { MistakeTagSelector } from './MistakeTagSelector';
 
 interface StagingTrayProps {
   selectedPages: number[];
   stumbledStagingPages: Set<number>;
+  totalPages?: number;
   onSelectPages: (pageNumbers: number[]) => void;
   onClearSelection: () => void;
   onToggleStumbleForSelected: () => void;
@@ -22,6 +24,7 @@ interface StagingTrayProps {
 export const StagingTray: React.FC<StagingTrayProps> = ({
   selectedPages,
   stumbledStagingPages,
+  totalPages = 604,
   onSelectPages,
   onClearSelection,
   onToggleStumbleForSelected,
@@ -31,6 +34,15 @@ export const StagingTray: React.FC<StagingTrayProps> = ({
   const [showRangeInput, setShowRangeInput] = useState(false);
   const [showNoteInput, setShowNoteInput] = useState(false);
   const [notesText, setNotesText] = useState('');
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+
+  const handleToggleTag = (tagId: string) => {
+    if (selectedTags.includes(tagId)) {
+      setSelectedTags(selectedTags.filter(t => t !== tagId));
+    } else {
+      setSelectedTags([...selectedTags, tagId]);
+    }
+  };
 
   // Parse numeric range e.g. "282-286" or "10,11,12"
   const handleApplyRangeInput = (e?: React.FormEvent) => {
@@ -47,15 +59,15 @@ export const StagingTray: React.FC<StagingTrayProps> = ({
         const start = parseInt(startStr, 10);
         const end = parseInt(endStr, 10);
         if (!isNaN(start) && !isNaN(end)) {
-          const min = Math.max(1, Math.min(604, Math.min(start, end)));
-          const max = Math.max(1, Math.min(604, Math.max(start, end)));
+          const min = Math.max(1, Math.min(totalPages, Math.min(start, end)));
+          const max = Math.max(1, Math.min(totalPages, Math.max(start, end)));
           for (let p = min; p <= max; p++) {
             parsedPages.add(p);
           }
         }
       } else {
         const num = parseInt(trimmed, 10);
-        if (!isNaN(num) && num >= 1 && num <= 604) {
+        if (!isNaN(num) && num >= 1 && num <= totalPages) {
           parsedPages.add(num);
         }
       }
@@ -93,8 +105,14 @@ export const StagingTray: React.FC<StagingTrayProps> = ({
   const handleQuickSubmit = (type: SessionType) => {
     if (selectedPages.length === 0) return;
     const stumbledList = Array.from(stumbledStagingPages).filter(p => selectedPages.includes(p));
-    onSubmitSession(type, selectedPages, stumbledList, notesText);
+    let combinedNotes = notesText.trim();
+    if (selectedTags.length > 0) {
+      const tagLabels = selectedTags.join(', ');
+      combinedNotes = combinedNotes ? `[Tags: ${tagLabels}] ${combinedNotes}` : `[Tags: ${tagLabels}]`;
+    }
+    onSubmitSession(type, selectedPages, stumbledList, combinedNotes);
     setNotesText('');
+    setSelectedTags([]);
     setShowNoteInput(false);
   };
 
@@ -184,16 +202,20 @@ export const StagingTray: React.FC<StagingTrayProps> = ({
           </div>
         </div>
 
-        {/* Optional Inline Note Input */}
-        {showNoteInput && (
-          <div className="animate-in fade-in">
+        {/* Surface Inline Mistake Classification */}
+        {(anyStumbled || showNoteInput) && (
+          <div className="space-y-2.5 animate-in fade-in bg-white/10 p-3 rounded-xl border border-white/15">
+            <MistakeTagSelector
+              selectedTags={selectedTags}
+              onToggleTag={handleToggleTag}
+            />
+
             <input
               type="text"
               value={notesText}
               onChange={e => setNotesText(e.target.value)}
               placeholder="Session notes (e.g., slight hesitation on ayah 14)..."
               className="w-full bg-white/10 border border-white/20 rounded-xl px-3 py-1.5 text-xs text-white placeholder-slate-light focus:outline-none focus:ring-1 focus:ring-teal-light"
-              autoFocus
             />
           </div>
         )}

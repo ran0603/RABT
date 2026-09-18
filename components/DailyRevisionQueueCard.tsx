@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { DailyQueueRecommendation } from '../lib/types';
-import { Play, Sparkles, Clock, AlertTriangle, CheckCircle } from 'lucide-react';
+import { Play, Sparkles, Clock, AlertTriangle, BookOpen } from 'lucide-react';
 
 interface DailyRevisionQueueCardProps {
   queue: DailyQueueRecommendation | null;
@@ -14,6 +14,8 @@ export const DailyRevisionQueueCard: React.FC<DailyRevisionQueueCardProps> = ({
   onSelectQueuePages
 }) => {
   if (!queue || queue.pages.length === 0) return null;
+
+  const firstPage = queue.pages[0];
 
   return (
     <section className="max-w-4xl lg:max-w-6xl 2xl:max-w-7xl 3xl:max-w-[1600px] mx-auto px-3 sm:px-4 pt-4 pb-2">
@@ -46,14 +48,14 @@ export const DailyRevisionQueueCard: React.FC<DailyRevisionQueueCardProps> = ({
           </div>
         </div>
 
-        {/* Right Action: CTA Button */}
-        <button
-          onClick={() => onSelectQueuePages(queue.pages)}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-teal-deep font-bold text-xs sm:text-sm hover:bg-surface shadow-md transition-all shrink-0 active:scale-[0.98]"
-        >
-          <Play className="w-4 h-4 fill-teal-deep" />
-          <span>Start Today's Review ({queue.pages.length} pp.)</span>
-        </button>
+        {/* Right Actions: CTA Buttons */}
+          <button
+            onClick={() => onSelectQueuePages(queue.pages)}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-teal-deep font-bold text-xs sm:text-sm hover:bg-surface shadow-md transition-all shrink-0 active:scale-[0.98]"
+          >
+            <Play className="w-4 h-4 fill-teal-deep" />
+            <span>Start Review ({queue.pages.length} pp.)</span>
+          </button>
       </div>
     </section>
   );

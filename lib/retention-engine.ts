@@ -100,12 +100,14 @@ export function calculateRetentionStates(
       const latestTouch = touches[touches.length - 1];
       lastTouchedAt = latestTouch.toISOString();
       const diffMs = refTime - latestTouch.getTime();
-      daysSinceTouch = Math.max(0, Math.floor(diffMs / (1000 * 60 * 60 * 24)));
+      const calcDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+      daysSinceTouch = isNaN(calcDays) ? 0 : Math.max(0, calcDays);
     } else if (isMemorized && memorizedAt) {
       const memDate = getAdjustedSessionDate(memorizedAt, cutoffHour);
       lastTouchedAt = memDate.toISOString();
       const diffMs = refTime - memDate.getTime();
-      daysSinceTouch = Math.max(0, Math.floor(diffMs / (1000 * 60 * 60 * 24)));
+      const calcDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+      daysSinceTouch = isNaN(calcDays) ? 0 : Math.max(0, calcDays);
     }
 
     // 1st Dimension: Lifetime Mastery (Hue / Depth)

@@ -17,6 +17,7 @@ export const JuzMacroStrip: React.FC<JuzMacroStripProps> = ({
   onSelectJuz
 }) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const totalPages = juzList.length > 0 ? juzList[juzList.length - 1].endPage : 604;
 
   return (
     <section className="bg-white border-b border-surface-border py-3 px-3 sm:px-4 select-none">
@@ -38,7 +39,7 @@ export const JuzMacroStrip: React.FC<JuzMacroStripProps> = ({
           ref={scrollContainerRef}
           className="flex items-center gap-2 overflow-x-auto pb-2 pt-1 scrollbar-thin scrollbar-thumb-surface-border scroll-smooth"
         >
-          {/* All 604 Pages Card */}
+          {/* All Pages Card */}
           <button
             onClick={() => onSelectJuz(null)}
             className={clsx(
@@ -49,7 +50,7 @@ export const JuzMacroStrip: React.FC<JuzMacroStripProps> = ({
             )}
           >
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold">All 604</span>
+              <span className="text-xs font-bold">All {totalPages}</span>
             </div>
             <div className="text-[10px] opacity-85 mt-0.5 font-medium">
               Full Canvas
