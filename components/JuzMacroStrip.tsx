@@ -68,7 +68,7 @@ export const JuzMacroStrip: React.FC<JuzMacroStripProps> = ({
                 key={j.juzNumber}
                 onClick={() => onSelectJuz(j.juzNumber)}
                 className={clsx(
-                  'flex-shrink-0 px-3 py-2 rounded-xl text-left border transition-all relative min-w-[110px]',
+                  'flex-shrink-0 px-2 py-2 rounded-xl text-left border transition-all relative min-w-[70px]',
                   isSelected
                     ? 'bg-teal-deep text-white border-teal-deep shadow-sm font-semibold'
                     : j.hasCriticalStaleness
@@ -95,10 +95,7 @@ export const JuzMacroStrip: React.FC<JuzMacroStripProps> = ({
                       title={`Contains pages untouched for ${j.maxStalenessDays} days (>25d stale)`}
                     />
                   )}
-                </div>
 
-                <div className="flex items-center justify-between text-[10px] mt-1 opacity-90 font-medium">
-                  <span>pp. {j.startPage}–{j.endPage}</span>
                   <span className={clsx(isSelected ? 'text-white' : 'text-slate-light')}>
                     {j.totalMemorized}/{j.endPage - j.startPage + 1}
                   </span>

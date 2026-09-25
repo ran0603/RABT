@@ -24,7 +24,6 @@ import { LegendDrawer } from '../components/LegendDrawer';
 import { OnboardingModal } from '../components/OnboardingModal';
 import { WelcomeAuthScreen } from '../components/WelcomeAuthScreen';
 import { EmailVerificationAlert } from '../components/EmailVerificationAlert';
-import { DailyRevisionQueueCard } from '../components/DailyRevisionQueueCard';
 import { TeacherShareModal } from '../components/TeacherShareModal';
 import { BookOpen } from 'lucide-react';
 
@@ -261,12 +260,6 @@ export default function Home() {
 
       {/* Unverified Email Cross-Device Sync Warning Banner */}
       <EmailVerificationAlert />
-
-      {/* Today's Automated Revision Target Queue */}
-      <DailyRevisionQueueCard
-        queue={dailyQueue}
-        onSelectQueuePages={handleSelectCluster}
-      />
 
       {/* 3 Independent Streaks Strip (Sunday start, Today/Yesterday forgiveness with day cutoff hour) */}
       <ActivityStreaks streaks={streaks} />
