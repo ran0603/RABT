@@ -68,7 +68,7 @@ export const JuzMacroStrip: React.FC<JuzMacroStripProps> = ({
                 key={j.juzNumber}
                 onClick={() => onSelectJuz(j.juzNumber)}
                 className={clsx(
-                  'flex-shrink-0 px-3 py-2 rounded-xl text-left border transition-all relative min-w-[110px]',
+                  'flex-shrink-0 px-3 py-2 rounded-xl text-left border transition-all relative min-w-[80px]',
                   isSelected
                     ? 'bg-teal-deep text-white border-teal-deep shadow-sm font-semibold'
                     : j.hasCriticalStaleness
