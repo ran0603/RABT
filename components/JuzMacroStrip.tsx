@@ -2,7 +2,7 @@
 
 import React, { useRef } from 'react';
 import { JuzMeta } from '../lib/types';
-import { AlertCircle, Layers } from 'lucide-react';
+import { Layers } from 'lucide-react';
 import { clsx } from 'clsx';
 
 interface JuzMacroStripProps {
@@ -30,7 +30,7 @@ export const JuzMacroStrip: React.FC<JuzMacroStripProps> = ({
             </h2>
           </div>
           <span className="text-[11px] text-slate-light">
-            Swipe horizontal • Amber dot = &gt;25d stale
+            Swipe horizontal
           </span>
         </div>
 
@@ -98,10 +98,10 @@ export const JuzMacroStrip: React.FC<JuzMacroStripProps> = ({
                 </div>
 
                 <div className="text-[10px] mt-1 opacity-90 font-medium">
-                  <span className={clsx(isSelected ? 'text-white' : 'text-slate-light')}>
+                  <p className={clsx(isSelected ? 'text-white' : 'text-slate-light')}>
                     {j.totalMemorized}/{j.endPage - j.startPage + 1}
-                  </span>
-                  <span>pp. {j.startPage}–{j.endPage}</span>
+                  </p>
+                  {/* <p>pp. {j.startPage}–{j.endPage}</p> */}
                 </div>
               </button>
             );

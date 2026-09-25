@@ -14,6 +14,7 @@ import { getJuzBounds, getTotalPages } from '../lib/quran-meta';
 import { getLocalUser, setLocalUser } from '../lib/supabase-client';
 import { Header } from '../components/Header';
 import { ActivityStreaks } from '../components/ActivityStreaks';
+import { ActivityHeatmap } from '../components/ActivityHeatmap';
 import { ContiguityChips } from '../components/ContiguityChips';
 import { JuzMacroStrip } from '../components/JuzMacroStrip';
 import { PageCanvasGrid } from '../components/PageCanvasGrid';
@@ -254,7 +255,7 @@ export default function Home() {
       <Header
         onOpenLegend={() => setIsLegendOpen(true)}
         onOpenLogDrawer={() => handleOpenLogModal('revise')}
-        onOpenShareModal={() => setIsShareModalOpen(true)}
+        // onOpenShareModal={() => setIsShareModalOpen(true)}
         totalMemorized={totalMemorizedCount}
       />
 
@@ -263,6 +264,13 @@ export default function Home() {
 
       {/* 3 Independent Streaks Strip (Sunday start, Today/Yesterday forgiveness with day cutoff hour) */}
       <ActivityStreaks streaks={streaks} />
+
+      {/* Activity Heatmap (Last 365 Days) */}
+      <ActivityHeatmap
+        sessions={storeState.sessions}
+        sessionPages={storeState.sessionPages}
+        profile={activeProfile}
+      />
 
       {/* Natural Contiguity Engine Quick-Fill Chips */}
       <ContiguityChips
