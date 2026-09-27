@@ -26,6 +26,7 @@ import { OnboardingModal } from '../components/OnboardingModal';
 import { WelcomeAuthScreen } from '../components/WelcomeAuthScreen';
 import { EmailVerificationAlert } from '../components/EmailVerificationAlert';
 import { TeacherShareModal } from '../components/TeacherShareModal';
+import { ActivityLogsModal } from '../components/ActivityLogsModal';
 import { BookOpen } from 'lucide-react';
 
 export default function Home() {
@@ -46,6 +47,7 @@ export default function Home() {
   const [isLegendOpen, setIsLegendOpen] = useState(false);
   const [isLogDrawerOpen, setIsLogDrawerOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [isActivityLogsOpen, setIsActivityLogsOpen] = useState(false);
   const [logInitialType, setLogInitialType] = useState<SessionType>('revise');
 
   // Check auth state on mount and trigger remote sync across devices
@@ -255,6 +257,7 @@ export default function Home() {
       <Header
         onOpenLegend={() => setIsLegendOpen(true)}
         onOpenLogDrawer={() => handleOpenLogModal('revise')}
+        onOpenActivityLogs={() => setIsActivityLogsOpen(true)}
         // onOpenShareModal={() => setIsShareModalOpen(true)}
         totalMemorized={totalMemorizedCount}
       />
@@ -270,6 +273,7 @@ export default function Home() {
         sessions={storeState.sessions}
         sessionPages={storeState.sessionPages}
         profile={activeProfile}
+        onOpenActivityLogs={() => setIsActivityLogsOpen(true)}
       />
 
       {/* Natural Contiguity Engine Quick-Fill Chips */}
@@ -367,6 +371,17 @@ export default function Home() {
       <LegendDrawer
         isOpen={isLegendOpen}
         onClose={() => setIsLegendOpen(false)}
+      />
+
+      {/* Activity Logs & History Viewer Modal */}
+      <ActivityLogsModal
+        isOpen={isActivityLogsOpen}
+        onClose={() => setIsActivityLogsOpen(false)}
+        sessions={storeState.sessions}
+        sessionPages={storeState.sessionPages}
+        onDeleteSession={async (sessionId) => {
+          await globalStore.deleteSession(sessionId);
+        }}
       />
 
       {/* First-Time Profile Onboarding Setup Modal */}

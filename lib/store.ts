@@ -483,6 +483,26 @@ export class RABTStore {
     return newSession;
   }
 
+  public async deleteSession(sessionId: string): Promise<void> {
+    this.sessions = this.sessions.filter(s => s.id !== sessionId);
+    this.sessionPages = this.sessionPages.filter(sp => sp.session_id !== sessionId);
+    this.saveState();
+
+    if (isSupabaseConfigured && supabase) {
+      try {
+        const userId = await this.getActiveUserId();
+        if (isValidUUID(userId)) {
+          const sb = supabase;
+          await sb.from('session_pages').delete().eq('session_id', sessionId);
+          await sb.from('study_sessions').delete().eq('id', sessionId);
+          console.log(`✅ Deleted study_session ${sessionId}`);
+        }
+      } catch (err) {
+        console.error('❌ DeleteSession error:', err);
+      }
+    }
+  }
+
   public async toggleMemorizedPages(pageNumbers: number[], markMemorized: boolean) {
     const userId = await this.getActiveUserId();
     const pagesSet = new Set(pageNumbers);

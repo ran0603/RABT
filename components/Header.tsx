@@ -3,12 +3,13 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { getLocalUser, AuthUser } from '../lib/supabase-client';
-import { Info, Plus, User, Share2 } from 'lucide-react';
+import { Info, Plus, User, Share2, History } from 'lucide-react';
 
 interface HeaderProps {
   onOpenLegend: () => void;
   onOpenLogDrawer: () => void;
   onOpenShareModal?: () => void;
+  onOpenActivityLogs?: () => void;
   totalMemorized: number;
 }
 
@@ -16,6 +17,7 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenLegend,
   onOpenLogDrawer,
   onOpenShareModal,
+  onOpenActivityLogs,
   totalMemorized
 }) => {
   const [user, setUser] = useState<AuthUser | null>(null);
@@ -60,6 +62,17 @@ export const Header: React.FC<HeaderProps> = ({
             <User className="w-3.5 h-3.5 text-teal-deep" />
             <span className="truncate max-w-[110px]">{user ? user.fullName : 'Learner'}</span>
           </Link>
+
+          {onOpenActivityLogs && (
+            <button
+              onClick={onOpenActivityLogs}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-surface-border text-slate hover:text-ink hover:bg-surface text-xs font-semibold transition-colors"
+              title="View Activity Logs & History"
+            >
+              <History className="w-3.5 h-3.5 text-teal-deep" />
+              <span className="hidden sm:inline">Logs</span>
+            </button>
+          )}
 
           {onOpenShareModal && (
             <button

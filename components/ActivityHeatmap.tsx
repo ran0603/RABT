@@ -2,13 +2,14 @@
 
 import React, { useMemo } from 'react';
 import { StudySession, SessionPage, Profile } from '../lib/types';
-import { Activity } from 'lucide-react';
+import { Activity, History } from 'lucide-react';
 import { clsx } from 'clsx';
 
 interface ActivityHeatmapProps {
   sessions: StudySession[];
   sessionPages: SessionPage[];
   profile: Profile;
+  onOpenActivityLogs?: () => void;
 }
 
 const DAYS_TO_SHOW = 365;
@@ -16,7 +17,8 @@ const DAYS_TO_SHOW = 365;
 export const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({
   sessions,
   sessionPages,
-  profile
+  profile,
+  onOpenActivityLogs
 }) => {
   const { maxCount, grid, monthLabels } = useMemo(() => {
     // 1. Calculate the activity counts per day
@@ -113,11 +115,23 @@ export const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({
   return (
     <section className="bg-white border-b border-surface-border py-4 px-3 sm:px-4">
       <div className="max-w-4xl lg:max-w-6xl 2xl:max-w-7xl 3xl:max-w-[1600px] mx-auto">
-        <div className="flex items-center gap-2 mb-3">
-          <Activity className="w-3.5 h-3.5 text-teal-deep" />
-          <h3 className="text-xs font-bold uppercase tracking-wider text-slate">
-            Activity Heatmap (Last Year)
-          </h3>
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <Activity className="w-3.5 h-3.5 text-teal-deep" />
+            <h3 className="text-xs font-bold uppercase tracking-wider text-slate">
+              Activity Heatmap (Last Year)
+            </h3>
+          </div>
+
+          {onOpenActivityLogs && (
+            <button
+              onClick={onOpenActivityLogs}
+              className="flex items-center gap-1.5 text-xs font-semibold text-teal-deep hover:text-teal-forest hover:underline transition-colors"
+            >
+              <History className="w-3.5 h-3.5" />
+              <span>View Session History Logs</span>
+            </button>
+          )}
         </div>
 
         <div className="overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-surface-border scrollbar-track-transparent">
