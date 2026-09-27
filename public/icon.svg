@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#176B68" />
+      <stop offset="100%" stop-color="#124B4A" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#124B4A" flood-opacity="0.3" />
+    </filter>
+  </defs>
+  
+  <!-- Outer Background Container -->
+  <rect width="512" height="512" rx="112" fill="url(#bgGrad)" />
+  
+  <!-- Subtle Inner Ring Accent -->
+  <rect x="24" y="24" width="464" height="464" rx="88" fill="none" stroke="#EAF3F2" stroke-opacity="0.15" stroke-width="4" />
+  
+  <!-- Decorative Background Ring -->
+  <circle cx="256" cy="256" r="160" fill="none" stroke="#EAF3F2" stroke-opacity="0.08" stroke-width="32" />
+  
+  <!-- Arabic Calligraphy Letter 'ر' (Ra) -->
+  <text 
+    x="256" 
+    y="330" 
+    text-anchor="middle" 
+    fill="#FFFFFF" 
+    font-family="'Amiri', 'Scheherazade New', 'Traditional Arabic', 'Arial', serif" 
+    font-size="280" 
+    font-weight="bold"
+    filter="url(#shadow)">ر</text>
+    
+  <!-- Small Golden / Apricot Accent Dot for Precision Engine Theme -->
+  <circle cx="350" cy="160" r="14" fill="#E7A66B" />
+</svg>

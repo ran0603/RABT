@@ -54,9 +54,9 @@ export const ActivityStreaks: React.FC<ActivityStreaksProps> = ({ streaks }) => 
               <div
                 key={item.type}
                 className={clsx(
-                  'p-3 rounded-xl border transition-all flex items-center justify-between',
+                  `p-3 rounded-xl border transition-all flex items-center justify-between bg-no-repeat bg-left bg-contain`,
                   isAlive
-                    ? 'bg-surface/70 border-surface-border text-ink'
+                    ? `bg-surface/70 border-surface-border text-ink`
                     : 'bg-surface/30 border-surface-border/60 text-slate'
                 )}
               >
