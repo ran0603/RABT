@@ -1,6 +1,6 @@
-const CACHE_NAME = 'rabt-pwa-v1';
+const CACHE_NAME = 'rabt-pwa-v2';
 
-// Critical shell resources to cache immediately on install
+// Critical static shell resources to precache immediately
 const PRECACHE_ASSETS = [
   '/',
   '/manifest.webmanifest',
@@ -9,10 +9,13 @@ const PRECACHE_ASSETS = [
   '/icon-512-maskable.png',
   '/icon.svg',
   '/apple-touch-icon.png',
-  '/favicon.ico'
+  '/favicon.ico',
+  '/login',
+  '/register',
+  '/settings'
 ];
 
-// Service Worker Install
+// Service Worker Install — Precache critical application shell
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
@@ -23,7 +26,7 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// Service Worker Activate
+// Service Worker Activate — Clean up obsolete cache versions
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
@@ -38,19 +41,21 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Service Worker Fetch Event
+// Service Worker Fetch Strategy
 self.addEventListener('fetch', (event) => {
   const { request } = event;
 
-  // Do not intercept non-GET requests or requests to Supabase API / auth
+  // Do not intercept non-GET requests or requests to Supabase API / remote backends
   if (request.method !== 'GET') return;
-  
+
   const url = new URL(request.url);
+
+  // Bypass API / Supabase calls from service worker caching
   if (url.hostname.includes('supabase.co') || url.pathname.startsWith('/api/')) {
     return;
   }
 
-  // Handle navigation (HTML page) requests
+  // Strategy 1: Page Navigation (HTML documents) — Network First with Cache Fallback
   if (request.mode === 'navigate') {
     event.respondWith(
       fetch(request)
@@ -68,48 +73,50 @@ self.addEventListener('fetch', (event) => {
           if (cachedResponse) return cachedResponse;
           const rootCache = await caches.match('/');
           if (rootCache) return rootCache;
-          return new Response('Offline - RABT requires cached content', {
-            status: 533,
-            headers: { 'Content-Type': 'text/html' }
-          });
+          return new Response(
+            '<!DOCTYPE html><html><head><title>RABT - Offline</title><meta name="viewport" content="width=device-width, initial-scale=1"></head><body style="font-family:system-ui;text-align:center;padding:3rem 1rem;"><h1>Offline Mode Active</h1><p>RABT is running offline. Your memorization progress is safely stored locally.</p></body></html>',
+            { headers: { 'Content-Type': 'text/html' } }
+          );
         })
     );
     return;
   }
 
-  // Handle static assets & scripts (Cache-First with Network Fallback)
+  // Strategy 2: Static Assets, Fonts, Scripts, Styles (Cache-First with Stale-While-Revalidate)
   event.respondWith(
     caches.match(request).then((cachedResponse) => {
       if (cachedResponse) {
-        // Fetch in background to revalidate cache (Stale-While-Revalidate)
+        // Asynchronously update cache in background
         fetch(request).then((networkResponse) => {
           if (networkResponse && networkResponse.status === 200) {
             caches.open(CACHE_NAME).then((cache) => {
               cache.put(request, networkResponse);
             });
           }
-        }).catch(() => {/* Ignore background fetch errors */});
+        }).catch(() => {/* Ignore background fetch failure */});
 
         return cachedResponse;
       }
 
       return fetch(request).then((networkResponse) => {
-        if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
-          return networkResponse;
+        // Cache valid basic & CORS responses (fonts, Next.js bundles, icons)
+        if (
+          networkResponse &&
+          networkResponse.status === 200 &&
+          (networkResponse.type === 'basic' || networkResponse.type === 'cors')
+        ) {
+          const responseClone = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(request, responseClone);
+          });
         }
-
-        const responseClone = networkResponse.clone();
-        caches.open(CACHE_NAME).then((cache) => {
-          cache.put(request, responseClone);
-        });
-
         return networkResponse;
       });
     })
   );
 });
 
-// Listen for update message
+// Skip waiting message handler
 self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting();

@@ -23,7 +23,10 @@ import {
   FileJson,
   Database,
   Check,
-  X
+  X,
+  Smartphone,
+  Wifi,
+  Laptop
 } from 'lucide-react';
 
 export default function SettingsPage() {
@@ -31,6 +34,7 @@ export default function SettingsPage() {
   const [profile, setProfile] = useState<Profile>(globalStore.getProfile());
   const [authUser, setAuthUser] = useState<AuthUser | null>(null);
   const [savedNotice, setSavedNotice] = useState(false);
+  const [isStandalone, setIsStandalone] = useState(false);
 
   // Import/Export State
   const [importModalOpen, setImportModalOpen] = useState(false);
@@ -44,6 +48,12 @@ export default function SettingsPage() {
   useEffect(() => {
     setProfile(globalStore.getProfile());
     setAuthUser(getLocalUser());
+
+    if (typeof window !== 'undefined') {
+      const standalone = window.matchMedia('(display-mode: standalone)').matches ||
+        (window.navigator as unknown as { standalone?: boolean }).standalone === true;
+      setIsStandalone(standalone);
+    }
   }, []);
 
   const handleExportData = () => {
@@ -365,12 +375,56 @@ export default function SettingsPage() {
           </div>
         </section>
 
-        {/* Section 4: Account & Sign Out */}
+        {/* Section 4: Device Installation & Offline Capabilities (PWA) */}
+        <section className="bg-white border border-surface-border rounded-2xl p-5 shadow-card space-y-4">
+          <div className="flex items-center gap-2 border-b border-surface-border pb-3">
+            <Smartphone className="w-4 h-4 text-teal-deep" />
+            <h2 className="text-sm font-bold text-ink uppercase tracking-wider">
+              4. Device Installation & Offline Access (PWA)
+            </h2>
+          </div>
+
+          <div className="p-4 rounded-xl bg-surface/50 border border-surface-border space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-teal-deep text-white flex items-center justify-center font-arabic text-xl font-bold">
+                  ر
+                </div>
+                <div>
+                  <h3 className="text-xs font-bold text-ink">Progressive Web App Status</h3>
+                  <p className="text-[11px] text-slate">
+                    {isStandalone ? 'Installed as Standalone App' : 'Web Application Mode (Installable)'}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                {isStandalone ? (
+                  <span className="text-[11px] font-semibold text-teal-forest bg-teal-light px-3 py-1 rounded-full border border-teal-deep/20 flex items-center gap-1.5">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-teal-deep" />
+                    <span>App Installed</span>
+                  </span>
+                ) : (
+                  <span className="text-[11px] font-semibold text-teal-forest bg-sage-light px-3 py-1 rounded-full border border-sage/30 flex items-center gap-1.5">
+                    <Wifi className="w-3.5 h-3.5 text-teal-deep" />
+                    <span>Offline Ready</span>
+                  </span>
+                )}
+              </div>
+            </div>
+
+            <p className="text-xs text-slate leading-relaxed">
+              RABT is built with an offline-first Service Worker and Web App Manifest. You can install it on iOS (Safari Share → Add to Home Screen), Android (Chrome install prompt), or Desktop (Chrome/Edge install icon) to launch RABT instantly without an internet connection.
+            </p>
+          </div>
+        </section>
+
+        {/* Section 5: Account & Sign Out */}
         <section className="bg-white border border-surface-border rounded-2xl p-5 shadow-card space-y-4">
           <div className="flex items-center gap-2 border-b border-surface-border pb-3">
             <User className="w-4 h-4 text-teal-deep" />
             <h2 className="text-sm font-bold text-ink uppercase tracking-wider">
-              4. Account & Authentication
+              5. Account & Authentication
             </h2>
           </div>
 
@@ -394,12 +448,12 @@ export default function SettingsPage() {
           </div>
         </section>
 
-        {/* Section 5: Data Backup & Migration (Export / Import JSON) */}
+        {/* Section 6: Data Backup & Migration (Export / Import JSON) */}
         <section className="bg-white border border-surface-border rounded-2xl p-5 shadow-card space-y-4">
           <div className="flex items-center gap-2 border-b border-surface-border pb-3">
             <Database className="w-4 h-4 text-teal-deep" />
             <h2 className="text-sm font-bold text-ink uppercase tracking-wider">
-              5. Data Backup & Migration (JSON)
+              6. Data Backup & Migration (JSON)
             </h2>
           </div>
 
@@ -470,12 +524,12 @@ export default function SettingsPage() {
           </div>
         </section>
 
-        {/* Section 6: Danger Zone — Data Reset */}
+        {/* Section 7: Danger Zone — Data Reset */}
         <section className="bg-red-50/30 border border-red-200 rounded-2xl p-5 shadow-card space-y-4">
           <div className="flex items-center gap-2 border-b border-red-200 pb-3">
             <AlertOctagon className="w-4 h-4 text-red-600" />
             <h2 className="text-sm font-bold text-red-800 uppercase tracking-wider">
-              6. Danger Zone — Data Reset
+              7. Danger Zone — Data Reset
             </h2>
           </div>
 
