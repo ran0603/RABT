@@ -1,8 +1,9 @@
-const CACHE_NAME = 'rabt-pwa-v2';
+const CACHE_NAME = 'rabt-pwa-v3';
 
 // Critical static shell resources to precache immediately
 const PRECACHE_ASSETS = [
   '/',
+  '/manifest.json',
   '/manifest.webmanifest',
   '/icon-192.png',
   '/icon-512.png',
@@ -107,7 +108,7 @@ self.addEventListener('fetch', (event) => {
         ) {
           const responseClone = networkResponse.clone();
           caches.open(CACHE_NAME).then((cache) => {
-            cache.put(request, responseClone);
+            cache.put(request, networkResponse);
           });
         }
         return networkResponse;

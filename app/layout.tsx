@@ -16,6 +16,7 @@ export const metadata: Metadata = {
   title: 'RABT | رَبْط — Hifz Early-Warning Retention Engine',
   description: 'A quiet, precise instrument for detecting forgetting and silent erosion in Qur’an memorization (Hifz).',
   applicationName: 'RABT',
+  manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
